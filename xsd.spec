@@ -11,6 +11,7 @@ Source0:	http://www.codesynthesis.com/download/xsd/3.3/%{name}-%{version}+dep.ta
 # Sent suggestion to upstream via e-mail 20090707
 Patch0:		%{name}-3.3.0-xsdcxx-rename.patch
 BuildRequires:	boost-devel
+BuildRequires:	iconv
 BuildRequires:	m4
 BuildRequires:	xerces-c-devel
 Requires:	xerces-c-devel
