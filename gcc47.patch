@@ -1,0 +1,36 @@
+diff -Naur xsd-3.3.0+dep.orig/libcult/cult/mm/evptr.hxx xsd-3.3.0+dep/libcult/cult/mm/evptr.hxx
+--- xsd-3.3.0+dep.orig/libcult/cult/mm/evptr.hxx	2010-01-01 12:12:06.000000000 +0100
++++ xsd-3.3.0+dep/libcult/cult/mm/evptr.hxx	2012-01-19 06:48:45.713095213 +0100
+@@ -70,7 +70,7 @@
+       Evptr&
+       operator= (Evptr const& ep)
+       {
+-        assign (ep.cp_ ? ep.cp_ : ep.p_, ep.c_);
++        this->assign (ep.cp_ ? ep.cp_ : ep.p_, ep.c_);
+ 
+         return *this;
+       }
+diff -Naur xsd-3.3.0+dep.orig/libcult/cult/mm/shptr.hxx xsd-3.3.0+dep/libcult/cult/mm/shptr.hxx
+--- xsd-3.3.0+dep.orig/libcult/cult/mm/shptr.hxx	2010-01-01 12:12:06.000000000 +0100
++++ xsd-3.3.0+dep/libcult/cult/mm/shptr.hxx	2012-01-19 07:06:45.656894436 +0100
+@@ -53,7 +53,7 @@
+       Shptr&
+       operator= (Shptr<Y> const& ap)
+       {
+-        assign (ap);
++        this->assign (ap);
+         return *this;
+       }
+ 
+diff -Naur xsd-3.3.0+dep.orig/xsd/libxsd/xsd/cxx/zc-istream.txx xsd-3.3.0+dep/xsd/libxsd/xsd/cxx/zc-istream.txx
+--- xsd-3.3.0+dep.orig/xsd/libxsd/xsd/cxx/zc-istream.txx	2010-04-28 08:58:09.000000000 +0200
++++ xsd-3.3.0+dep/xsd/libxsd/xsd/cxx/zc-istream.txx	2012-01-19 06:49:34.733902904 +0100
+@@ -32,7 +32,7 @@
+       C* b (const_cast<C*> (str_.data ()));
+       C* e (b + str_.size ());
+ 
+-      setg (b, b, e);
++      this->setg (b, b, e);
+     }
+ 
+     template <typename C>
