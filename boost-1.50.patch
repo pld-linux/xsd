@@ -1,6 +1,6 @@
 diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/parser.cxx xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/parser.cxx
 --- xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/parser.cxx	2010-04-27 21:31:24.000000000 +0200
-+++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/parser.cxx	2012-07-11 13:01:05.201228465 +0200
++++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/parser.cxx	2012-07-12 08:46:38.988677816 +0200
 @@ -1274,7 +1274,7 @@
      operator () (SemanticGraph::Path const& x,
                   SemanticGraph::Path const& y) const
@@ -21,7 +21,53 @@ diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/parser.cxx xsd-3.3.0+de
                && x.ns_ < y.ns_);
        }
  
-@@ -4730,7 +4730,7 @@
+@@ -2376,16 +2376,7 @@
+     Path path, rel_path, abs_path;
+     try
+     {
+-      try
+-      {
+-        path = Path (loc);
+-      }
+-      catch (InvalidPath const&)
+-      {
+-        // Retry as a native path.
+-        //
+-        path = Path (loc, boost::filesystem::native);
+-      }
++      path = Path (loc);
+ 
+       if (path.is_complete ())
+       {
+@@ -2479,16 +2470,7 @@
+     Path path, rel_path, abs_path;
+     try
+     {
+-      try
+-      {
+-        path = Path (loc);
+-      }
+-      catch (InvalidPath const&)
+-      {
+-        // Retry as a native path.
+-        //
+-        path = Path (loc, boost::filesystem::native);
+-      }
++      path = Path (loc);
+ 
+       if (path.is_complete ())
+       {
+@@ -4675,8 +4657,7 @@
+ 
+ 
+       XSDFrontend::SemanticGraph::Path abs_path (
+-        XML::transcode_to_narrow (e.getLocation ()->getURI ()),
+-        boost::filesystem::native);
++        XML::transcode_to_narrow (e.getLocation ()->getURI ()));
+ 
+       XSDFrontend::SemanticGraph::Path rel_path (ctx_.file (abs_path));
+ 
+@@ -4730,7 +4711,7 @@
            ctx_ (ctx)
      {
        setSystemId (XML::XMLChString (
@@ -30,9 +76,37 @@ diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/parser.cxx xsd-3.3.0+de
      }
  
      virtual Xerces::BinInputStream*
+@@ -4803,8 +4784,7 @@
+ 
+       // base_uri should be a valid path by now.
+       //
+-      Path base (XML::transcode_to_narrow (base_uri),
+-                 boost::filesystem::native);
++      Path base (XML::transcode_to_narrow (base_uri));
+ 
+       if (prv_id == 0)
+       {
+@@ -4830,16 +4810,7 @@
+       {
+         Path path;
+ 
+-        try
+-        {
+-          path = Path (path_str);
+-        }
+-        catch (InvalidPath const&)
+-        {
+-          // Retry as a native path.
+-          //
+-          path = Path (path_str, boost::filesystem::native);
+-        }
++        path = Path (path_str);
+ 
+         Path base_dir (base.branch_path ());
+ 
 diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx
 --- xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx	2010-04-27 21:31:24.000000000 +0200
-+++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx	2012-07-11 13:01:05.201228465 +0200
++++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx	2012-07-12 08:46:38.985344483 +0200
 @@ -342,5 +342,5 @@
  std::wostream&
  operator<< (std::wostream& os, XSDFrontend::SemanticGraph::Path const& path)
@@ -42,7 +116,7 @@ diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/semantic-graph/elements
  }
 diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/anonymous.cxx xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/anonymous.cxx
 --- xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/anonymous.cxx	2010-04-27 21:31:24.000000000 +0200
-+++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/anonymous.cxx	2012-07-11 13:01:05.201228465 +0200
++++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/anonymous.cxx	2012-07-12 08:46:38.985344483 +0200
 @@ -275,7 +275,7 @@
              }
              catch (SemanticGraph::InvalidPath const&)
@@ -81,8 +155,8 @@ diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/anonymo
          String name (
 diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/schema-per-type.cxx xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/schema-per-type.cxx
 --- xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/schema-per-type.cxx	2010-04-27 21:31:24.000000000 +0200
-+++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/schema-per-type.cxx	2012-07-11 13:01:05.201228465 +0200
-@@ -358,7 +358,7 @@
++++ xsd-3.3.0+dep/libxsd-frontend/xsd-frontend/transformations/schema-per-type.cxx	2012-07-12 08:46:38.988677816 +0200
+@@ -358,11 +358,11 @@
          }
          catch (SemanticGraph::InvalidPath const&)
          {
@@ -91,9 +165,14 @@ diff -ur xsd-3.3.0+dep.orig/libxsd-frontend/xsd-frontend/transformations/schema-
          }
  
          NarrowString tf (trans_.translate_schema (abs_path));
+-        NarrowString file (tf ? tf : path.leaf ());
++        NarrowString file (tf ? tf : path.filename().string());
+ 
+         Size p (file.rfind ('.'));
+         NarrowString ext (
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/elements.cxx xsd-3.3.0+dep/xsd/xsd/cxx/elements.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/cxx/elements.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/cxx/elements.cxx	2012-07-11 13:01:05.207895131 +0200
++++ xsd-3.3.0+dep/xsd/xsd/cxx/elements.cxx	2012-07-12 08:46:38.988677816 +0200
 @@ -326,7 +326,7 @@
          }
          catch (SemanticGraph::InvalidPath const&)
@@ -105,7 +184,7 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/elements.cxx xsd-3.3.0+dep/xsd/xsd/cxx/e
  
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/elements.cxx xsd-3.3.0+dep/xsd/xsd/cxx/parser/elements.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/elements.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/cxx/parser/elements.cxx	2012-07-11 13:01:05.207895131 +0200
++++ xsd-3.3.0+dep/xsd/xsd/cxx/parser/elements.cxx	2012-07-12 08:46:38.988677816 +0200
 @@ -244,7 +244,7 @@
        }
        catch (SemanticGraph::InvalidPath const&)
@@ -117,7 +196,16 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/elements.cxx xsd-3.3.0+dep/xsd/xs
        String inc_path;
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/generator.cxx xsd-3.3.0+dep/xsd/xsd/cxx/parser/generator.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/generator.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/cxx/parser/generator.cxx	2012-07-11 13:01:05.207895131 +0200
++++ xsd-3.3.0+dep/xsd/xsd/cxx/parser/generator.cxx	2012-07-12 08:46:38.988677816 +0200
+@@ -552,7 +552,7 @@
+     {
+       try
+       {
+-        Path fs_path (path, boost::filesystem::native);
++        Path fs_path (path);
+         ifs.open (fs_path, std::ios_base::in | std::ios_base::binary);
+ 
+         if (!ifs.is_open ())
 @@ -638,7 +638,7 @@
        {
          if (NarrowString name = ops.value<CLI::extern_xml_schema> ())
@@ -127,6 +215,50 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/generator.cxx xsd-3.3.0+dep/xsd/x
              generate_xml_schema = false;
          }
        }
+@@ -815,7 +815,7 @@
+ 
+       // Generate code.
+       //
+-      NarrowString name (file_path.leaf ());
++      NarrowString name (file_path.filename().string());
+       NarrowString skel_suffix (ops.value <CLI::skel_file_suffix> ());
+       NarrowString impl_suffix (ops.value <CLI::impl_file_suffix> ());
+ 
+@@ -921,9 +921,9 @@
+         cxx_driver_name = cxx_driver_expr.merge (name);
+       }
+ 
+-      Path hxx_path (hxx_name, boost::filesystem::native);
+-      Path ixx_path (ixx_name, boost::filesystem::native);
+-      Path cxx_path (cxx_name, boost::filesystem::native);
++      Path hxx_path (hxx_name);
++      Path ixx_path (ixx_name);
++      Path cxx_path (cxx_name);
+ 
+       Path hxx_impl_path;
+       Path cxx_impl_path;
+@@ -931,9 +931,9 @@
+ 
+       if (impl || driver)
+       {
+-        hxx_impl_path = Path (hxx_impl_name, boost::filesystem::native);
+-        cxx_impl_path = Path (cxx_impl_name, boost::filesystem::native);
+-        cxx_driver_path = Path (cxx_driver_name, boost::filesystem::native);
++        hxx_impl_path = Path (hxx_impl_name);
++        cxx_impl_path = Path (cxx_impl_name);
++        cxx_driver_path = Path (cxx_driver_name);
+       }
+ 
+       Path out_dir;
+@@ -942,7 +942,7 @@
+       {
+         try
+         {
+-          out_dir = Path (dir, boost::filesystem::native);
++          out_dir = Path (dir);
+         }
+         catch (InvalidPath const&)
+         {
 @@ -1010,7 +1010,7 @@
          }
  
@@ -181,9 +313,18 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/parser/generator.cxx xsd-3.3.0+dep/xsd/x
        }
  
        // Print copyright and license.
+@@ -1168,7 +1168,7 @@
+       NarrowString guard_prefix (ops.value<CLI::guard_prefix> ());
+ 
+       if (!guard_prefix)
+-        guard_prefix = file_path.branch_path ().native_directory_string ();
++        guard_prefix = file_path.branch_path ().native ();
+ 
+       if (guard_prefix)
+         guard_prefix += '_';
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/elements.cxx xsd-3.3.0+dep/xsd/xsd/cxx/tree/elements.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/elements.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/cxx/tree/elements.cxx	2012-07-11 13:01:05.204561798 +0200
++++ xsd-3.3.0+dep/xsd/xsd/cxx/tree/elements.cxx	2012-07-12 08:46:38.988677816 +0200
 @@ -1312,7 +1312,7 @@
        }
        catch (SemanticGraph::InvalidPath const&)
@@ -195,7 +336,16 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/elements.cxx xsd-3.3.0+dep/xsd/xsd/
        String inc_path;
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/generator.cxx xsd-3.3.0+dep/xsd/xsd/cxx/tree/generator.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/generator.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/cxx/tree/generator.cxx	2012-07-11 13:01:05.204561798 +0200
++++ xsd-3.3.0+dep/xsd/xsd/cxx/tree/generator.cxx	2012-07-12 08:46:38.988677816 +0200
+@@ -773,7 +773,7 @@
+     {
+       try
+       {
+-        Path fs_path (path, boost::filesystem::native);
++        Path fs_path (path);
+         ifs.open (fs_path, std::ios_base::in | std::ios_base::binary);
+ 
+         if (!ifs.is_open ())
 @@ -939,7 +939,7 @@
        {
          if (NarrowString name = ops.value<CLI::extern_xml_schema> ())
@@ -205,6 +355,52 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/generator.cxx xsd-3.3.0+dep/xsd/xsd
              generate_xml_schema = false;
          }
        }
+@@ -954,7 +954,7 @@
+ 
+       // Generate code.
+       //
+-      NarrowString name (file_path.leaf ());
++      NarrowString name (file_path.filename().string());
+ 
+       NarrowString hxx_suffix (ops.value <CLI::hxx_suffix> ());
+       NarrowString ixx_suffix (ops.value <CLI::ixx_suffix> ());
+@@ -1013,9 +1013,9 @@
+       NarrowString ixx_name (inline_ ? ixx_expr.merge (name) : NarrowString ());
+       NarrowString fwd_name (forward ? fwd_expr.merge (name) : NarrowString ());
+ 
+-      Path hxx_path (hxx_name, boost::filesystem::native);
+-      Path ixx_path (ixx_name, boost::filesystem::native);
+-      Path fwd_path (fwd_name, boost::filesystem::native);
++      Path hxx_path (hxx_name);
++      Path ixx_path (ixx_name);
++      Path fwd_path (fwd_name);
+       Paths cxx_paths;
+ 
+       if (source)
+@@ -1041,12 +1041,12 @@
+             }
+ 
+             cxx_paths.push_back (
+-              Path (cxx_expr.merge (part_name), boost::filesystem::native));
++              Path (cxx_expr.merge (part_name)));
+           }
+         }
+         else
+           cxx_paths.push_back (
+-            Path (cxx_expr.merge (name), boost::filesystem::native));
++            Path (cxx_expr.merge (name)));
+       }
+ 
+       Path out_dir;
+@@ -1055,7 +1055,7 @@
+       {
+         try
+         {
+-          out_dir = Path (dir, boost::filesystem::native);
++          out_dir = Path (dir);
+         }
+         catch (InvalidPath const&)
+         {
 @@ -1108,7 +1108,7 @@
          }
  
@@ -241,9 +437,18 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/cxx/tree/generator.cxx xsd-3.3.0+dep/xsd/xsd
            cxx.push_back (s);
          }
        }
+@@ -1230,7 +1230,7 @@
+       NarrowString guard_prefix (ops.value<CLI::guard_prefix> ());
+ 
+       if (!guard_prefix)
+-        guard_prefix = file_path.branch_path ().native_directory_string ();
++        guard_prefix = file_path.branch_path ().native ();
+ 
+       if (guard_prefix)
+         guard_prefix += '_';
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/xsd.cxx xsd-3.3.0+dep/xsd/xsd/xsd.cxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/xsd.cxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/xsd.cxx	2012-07-11 13:01:05.204561798 +0200
++++ xsd-3.3.0+dep/xsd/xsd/xsd.cxx	2012-07-12 08:46:38.988677816 +0200
 @@ -675,7 +675,7 @@
                if (NarrowString name =
                    tree_ops->value<CXX::Tree::CLI::extern_xml_schema> ())
@@ -264,7 +469,7 @@ diff -ur xsd-3.3.0+dep.orig/xsd/xsd/xsd.cxx xsd-3.3.0+dep/xsd/xsd/xsd.cxx
              }
 diff -ur xsd-3.3.0+dep.orig/xsd/xsd/xsd.hxx xsd-3.3.0+dep/xsd/xsd/xsd.hxx
 --- xsd-3.3.0+dep.orig/xsd/xsd/xsd.hxx	2010-04-28 08:58:09.000000000 +0200
-+++ xsd-3.3.0+dep/xsd/xsd/xsd.hxx	2012-07-11 13:01:05.201228465 +0200
++++ xsd-3.3.0+dep/xsd/xsd/xsd.hxx	2012-07-12 08:46:38.988677816 +0200
 @@ -38,7 +38,7 @@
    {
      if (!canceled_)
