@@ -2,7 +2,7 @@ Summary:	W3C XML schema to C++ data binding compiler
 Summary(pl.UTF-8):	Kompilator schematów W3C XML do wiązań danych C++
 Name:		xsd
 Version:	3.3.0
-Release:	8
+Release:	9
 Group:		Development/Tools
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL-licensed Xerces
 License:	GPL v2 with FLOSS exceptions
@@ -44,6 +44,9 @@ skomplikowaniem odczytu i zapisu XML-a.
 Summary:	API documentation files for XSD
 Summary(pl.UTF-8):	Dokumentacja API XSD
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 This package contains API documentation for XSD.
@@ -72,9 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 # Split API documentation to -doc subpackage.
 rm -rf apidocdir
 install -d apidocdir
-mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/*.{xhtml,css} apidocdir/
-mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/cxx/ apidocdir/
-mv $RPM_BUILD_ROOT%{_datadir}/doc/xsd/ docdir/
+mv $RPM_BUILD_ROOT%{_docdir}/xsd/*.{xhtml,css} apidocdir/
+mv $RPM_BUILD_ROOT%{_docdir}/xsd/cxx/ apidocdir/
+mv $RPM_BUILD_ROOT%{_docdir}/xsd/ docdir/
 
 # Convert to utf-8.
 for file in docdir/NEWS; do
@@ -90,7 +93,7 @@ mv $RPM_BUILD_ROOT%{_bindir}/xsd $RPM_BUILD_ROOT%{_bindir}/xsdcxx
 mv $RPM_BUILD_ROOT%{_mandir}/man1/xsd.1 $RPM_BUILD_ROOT%{_mandir}/man1/xsdcxx.1
 
 # Remove duplicate docs.
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/doc/libxsd
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/libxsd
 
 # Remove Microsoft Visual C++ compiler helper files.
 %{__rm} -r $RPM_BUILD_ROOT%{_includedir}/xsd/cxx/compilers
