@@ -1,12 +1,12 @@
-diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
---- xsd/documentation/xsd.1.rename	2010-06-20 15:45:31.000000000 +0300
-+++ xsd/documentation/xsd.1	2010-06-20 15:46:24.000000000 +0300
+diff -up xsd/doc/xsd.1.rename xsd/doc/xsd.1
+--- xsd/doc/xsd.1.rename	2010-06-20 15:45:31.000000000 +0300
++++ xsd/doc/xsd.1	2010-06-20 15:46:24.000000000 +0300
 @@ -1,16 +1,16 @@
  .\" Process this file with
 -.\" groff -man -Tascii xsd.1
 +.\" groff -man -Tascii xsdcxx.1
  .\"
- .TH XSD 1 "April 2010" "XSD 3.3.0"
+ .TH XSD 1 "July 2014" "XSD 4.0.0"
  .SH NAME
 -xsd \- W3C XML Schema to C++ Compiler
 +xsdcxx \- W3C XML Schema to C++ Compiler
@@ -54,14 +54,14 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  .RE
  .PP
 @@ -203,7 +203,7 @@ For example, if you have file
- with namespace
- .B http://example.com/hello
- and you run
--.B xsd
-+.B xsdcxx
- on this file, then the string in question will be:
+ \fIfilename\fP \fInamespace\fP
  
- .B hello.xsd. http://example.com/hello
+ For example, if you have file \fBhello\.xsd\fP with namespace
+-\fBhttp://example\.com/hello\fP and you run \fBxsd\fP on this file, then the
++\fBhttp://example\.com/hello\fP and you run \fBxsdcxx\fP on this file, then the
+ string in question will be:
+ 
+ \fBhello\.xsd\. http://example\.com/hello\fP
 @@ -1877,7 +1877,7 @@ option. With this approach you don't nee
  .\"
  .SH DIAGNOSTICS
@@ -71,9 +71,9 @@ diff -up xsd/documentation/xsd.1.rename xsd/documentation/xsd.1
  will issue diagnostic messages to
  .B STDERR
  and exit with non-zero exit code.
-diff -up xsd/documentation/xsd.xhtml.rename xsd/documentation/xsd.xhtml
---- xsd/documentation/xsd.xhtml.rename	2010-06-20 15:47:29.000000000 +0300
-+++ xsd/documentation/xsd.xhtml	2010-06-20 15:47:30.000000000 +0300
+diff -up xsd/doc/xsd.xhtml.rename xsd/doc/xsd.xhtml
+--- xsd/doc/xsd.xhtml.rename	2010-06-20 15:47:29.000000000 +0300
++++ xsd/doc/xsd.xhtml	2010-06-20 15:47:30.000000000 +0300
 @@ -50,19 +50,19 @@
  
    <h1>NAME</h1>
@@ -110,13 +110,13 @@ diff -up xsd/documentation/xsd.xhtml.rename xsd/documentation/xsd.xhtml
  
 @@ -174,7 +174,7 @@
  
-       <p>For example, if you have file <code><b>hello.xsd</b></code>
-         with namespace <code><b>http://example.com/hello</b></code> and you run
--        <code><b>xsd</b></code> on this file, then the string in question
-+        <code><b>xsdcxx</b></code> on this file, then the string in question
-         will be:</p>
+   <p>For example, if you have file <code><b>hello.xsd</b></code> with
+   namespace <code><b>http://example.com/hello</b></code> and you run
+-  <code><b>xsd</b></code> on this file, then the string in question will
++  <code><b>xsdcxx</b></code> on this file, then the string in question will
+   be:</p>
  
-       <p><code><b>hello.xsd. http://example.com/hello</b></code></p>
+   <p><code><b>hello.xsd. http://example.com/hello</b></code></p>
 @@ -1575,7 +1575,7 @@ namespace .*
    <h1>DIAGNOSTICS</h1>
  

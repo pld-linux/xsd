@@ -1,17 +1,15 @@
 Summary:	W3C XML schema to C++ data binding compiler
 Summary(pl.UTF-8):	Kompilator schematów W3C XML do wiązań danych C++
 Name:		xsd
-Version:	3.3.0
-Release:	13
+Version:	4.0.0
+Release:	1
 Group:		Development/Tools
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL-licensed Xerces
 License:	GPL v2 with FLOSS exceptions
-Source0:	http://www.codesynthesis.com/download/xsd/3.3/%{name}-%{version}+dep.tar.bz2
-# Source0-md5:	1bad45103f9111964b78d6f2327fbb15
+Source0:	http://www.codesynthesis.com/download/xsd/4.0/%{name}-%{version}+dep.tar.bz2
+# Source0-md5:	ae64d7fcd258addc9b045fe3f96208bb
 # Sent suggestion to upstream via e-mail 20090707
 Patch0:		%{name}-3.3.0-xsdcxx-rename.patch
-Patch1:		gcc47.patch
-Patch2:		boost-1.50.patch
 URL:		http://www.codesynthesis.com/products/xsd/
 BuildRequires:	boost-devel
 BuildRequires:	iconv
@@ -59,8 +57,6 @@ Dokumentacja API XSD.
 cd xsd
 %patch0 -p1
 cd ..
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__make} \
