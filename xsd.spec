@@ -2,7 +2,7 @@ Summary:	W3C XML schema to C++ data binding compiler
 Summary(pl.UTF-8):	Kompilator schematów W3C XML do wiązań danych C++
 Name:		xsd
 Version:	4.0.0
-Release:	1
+Release:	2
 Group:		Development/Tools
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL-licensed Xerces
 License:	GPL v2 with FLOSS exceptions
