@@ -13,12 +13,11 @@ Patch0:		%{name}-3.3.0-xsdcxx-rename.patch
 URL:		http://www.codesynthesis.com/products/xsd/
 BuildRequires:	boost-devel
 BuildRequires:	iconv
+BuildRequires:	libstdc++-devel
 BuildRequires:	m4
 BuildRequires:	xerces-c-devel
 Requires:	xerces-c-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		specflags	-fpermissive
 
 %description
 CodeSynthesis XSD is an open-source, cross-platform W3C XML Schema to
@@ -61,7 +60,7 @@ cd ..
 %build
 %{__make} \
 	verbose=1 \
-	CXXFLAGS="%{rpmcxxflags}"
+	CXXFLAGS="%{rpmcxxflags} -fpermissive"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -71,13 +70,13 @@ rm -rf $RPM_BUILD_ROOT
 # Split API documentation to -doc subpackage.
 rm -rf apidocdir
 install -d apidocdir
-mv $RPM_BUILD_ROOT%{_docdir}/xsd/*.{xhtml,css} apidocdir/
-mv $RPM_BUILD_ROOT%{_docdir}/xsd/cxx/ apidocdir/
-mv $RPM_BUILD_ROOT%{_docdir}/xsd/ docdir/
+%{__mv} $RPM_BUILD_ROOT%{_docdir}/xsd/*.{xhtml,css} apidocdir/
+%{__mv} $RPM_BUILD_ROOT%{_docdir}/xsd/cxx/ apidocdir/
+%{__mv} $RPM_BUILD_ROOT%{_docdir}/xsd/ docdir/
 
 # Convert to utf-8.
 for file in docdir/NEWS; do
-	mv $file timestamp
+	%{__mv} $file timestamp
 	iconv -f ISO-8859-1 -t UTF-8 -o $file timestamp
 	touch -r timestamp $file
 done
@@ -85,8 +84,8 @@ done
 # Rename binary to xsdcxx to avoid conflicting with mono-web package.
 # Sent suggestion to upstream via e-mail 20090707
 # they will consider renaming in 4.0.0
-mv $RPM_BUILD_ROOT%{_bindir}/xsd $RPM_BUILD_ROOT%{_bindir}/xsdcxx
-mv $RPM_BUILD_ROOT%{_mandir}/man1/xsd.1 $RPM_BUILD_ROOT%{_mandir}/man1/xsdcxx.1
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/xsd $RPM_BUILD_ROOT%{_bindir}/xsdcxx
+%{__mv} $RPM_BUILD_ROOT%{_mandir}/man1/xsd.1 $RPM_BUILD_ROOT%{_mandir}/man1/xsdcxx.1
 
 # Remove duplicate docs.
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/libxsd
@@ -97,11 +96,11 @@ mv $RPM_BUILD_ROOT%{_mandir}/man1/xsd.1 $RPM_BUILD_ROOT%{_mandir}/man1/xsdcxx.1
 # Remove redundant PostScript files that rpmlint grunts about not being UTF8
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=502024#c27
 # for Boris Kolpackov's explanation about those
-find apidocdir -name "*.ps" | xargs rm -f
+find apidocdir -name "*.ps" | xargs %{__rm}
 # Remove other unwanted crap
 find apidocdir -name "*.doxygen" \
             -o -name "makefile" \
-            -o -name "*.html2ps" | xargs rm -f
+            -o -name "*.html2ps" | xargs %{__rm}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
