@@ -41,9 +41,7 @@ skomplikowaniem odczytu i zapisu XML-a.
 Summary:	API documentation files for XSD
 Summary(pl.UTF-8):	Dokumentacja API XSD
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 This package contains API documentation for XSD.
