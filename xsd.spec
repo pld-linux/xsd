@@ -2,7 +2,7 @@ Summary:	W3C XML schema to C++ data binding compiler
 Summary(pl.UTF-8):	Kompilator schematów W3C XML do wiązań danych C++
 Name:		xsd
 Version:	4.0.0
-Release:	2
+Release:	3
 Group:		Development/Tools
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL-licensed Xerces
 License:	GPL v2 with FLOSS exceptions
@@ -13,10 +13,15 @@ Patch0:		%{name}-3.3.0-xsdcxx-rename.patch
 URL:		http://www.codesynthesis.com/products/xsd/
 BuildRequires:	boost-devel
 BuildRequires:	iconv
-BuildRequires:	libstdc++-devel
+BuildRequires:	libcutl-devel >= 1.8.0
+BuildRequires:	libstdc++-devel >= 6:4.2
+BuildRequires:	libxsd-frontend-devel >= 2.0.0
 BuildRequires:	m4
-BuildRequires:	xerces-c-devel
-Requires:	xerces-c-devel
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	xerces-c-devel >= 3.0.0
+Requires:	libcutl >= 1.8.0
+Requires:	libxsd-frontend >= 2.0.0
+Requires:	xerces-c-devel >= 3.0.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -55,15 +60,23 @@ cd xsd
 %patch0 -p1
 cd ..
 
+echo 'libxsd_frontend_installed := y' > xsd/build/import/libxsd-frontend/configuration-dynamic.make
+
 %build
 %{__make} \
-	verbose=1 \
-	CXXFLAGS="%{rpmcxxflags} -fpermissive"
+	CXX="%{__cxx}" \
+	CPPFLAGS="%{rpmcppflags}" \
+	CXXFLAGS="%{rpmcxxflags}" \
+	LDFLAGS="%{rpmldflags}" \
+	EXTERNAL_LIBCUTL=y \
+	verbose=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
-	install_prefix="$RPM_BUILD_ROOT%{_prefix}"
+	install_prefix="$RPM_BUILD_ROOT%{_prefix}" \
+	EXTERNAL_LIBCUTL=y
 
 # Split API documentation to -doc subpackage.
 rm -rf apidocdir
