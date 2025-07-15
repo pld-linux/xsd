@@ -57,7 +57,7 @@ Dokumentacja API XSD.
 %prep
 %setup -q -n %{name}-%{version}+dep
 cd xsd
-%patch0 -p1
+%patch -P0 -p1
 cd ..
 
 echo 'libxsd_frontend_installed := y' > xsd/build/import/libxsd-frontend/configuration-dynamic.make
